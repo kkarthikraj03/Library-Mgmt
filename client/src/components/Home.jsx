@@ -16,6 +16,7 @@ const Home = () => {
         throw new Error('Failed to fetch data');
       }
       const data = await response.json();
+      // console.log(data);
       SetBookData(data);
     } catch (error) {
       console.error("Error: ", error);
@@ -31,27 +32,27 @@ const Home = () => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   }
-    const filteredBooks = bookData.filter(book => {
-      const title = book.Title.toLowerCase();
-      const author = book.Author.toLowerCase();
-      const publisher = book.Publisher.toLowerCase();
-      const genre = book.Genre.toLowerCase();
-      const query = searchQuery.toLowerCase();
+  const filteredBooks = bookData.filter(book => {
+    const title = book.title.toLowerCase();
+    const author = book.author.toLowerCase();
+    const publisher = book.publisher.toLowerCase();
+    const genre = book.genre.toLowerCase();
+    const query = searchQuery.toLowerCase();
 
-      let matchesSearchQuery = title.includes(query) || author.includes(query) || publisher.includes(query) || genre.includes(query);
-      let matchesSelectedValue = true;
+    let matchesSearchQuery = title.includes(query) || author.includes(query) || publisher.includes(query) || genre.includes(query);
+    let matchesSelectedValue = true;
 
-      if (selectedValue && sortBy) {
-        if (sortBy === 'Author') {
-          matchesSelectedValue = book.Author.toLowerCase() === selectedValue.toLowerCase();
-        } else if (sortBy === 'Genre') {
-          matchesSelectedValue = book.Genre.toLowerCase() === selectedValue.toLowerCase();
-        } else if (sortBy === 'Publisher') {
-          matchesSelectedValue = book.Publisher.toLowerCase() === selectedValue.toLowerCase();
-        }
+    if (selectedValue && sortBy) {
+      if (sortBy === 'author') {
+        matchesSelectedValue = book.author.toLowerCase() === selectedValue.toLowerCase();
+      } else if (sortBy === 'genre') {
+        matchesSelectedValue = book.genre.toLowerCase() === selectedValue.toLowerCase();
+      } else if (sortBy === 'publisher') {
+        matchesSelectedValue = book.publisher.toLowerCase() === selectedValue.toLowerCase();
       }
-      return matchesSearchQuery && matchesSelectedValue;
-    })
+    }
+    return matchesSearchQuery && matchesSelectedValue;
+  })
 
   const handleSortBy = (e) => {
     SetSortBy(e.target.value);
@@ -77,19 +78,19 @@ const Home = () => {
           />
         </div>
         <div>
-          <label htmlFor='sort' className='mr-4'>Sort By</label>
+          <label htmlFor='sort' className='mr-2'>Sort By</label>
           <select name="sort" id="sort" className='rounded-md p-1' value={sortBy} onChange={handleSortBy}>
-            <option value="">Select</option>
-            <option value='Genre'>Genre</option>
-            <option value='Author'>Author</option>
-            <option value='Publisher'>Publisher</option>
+            <option value=''>Select</option>
+            <option value='genre'>Genre</option>
+            <option value='author'>Author</option>
+            <option value='publisher'>Publisher</option>
           </select>
         </div>
         <div>
           <label htmlFor='selectedValue' className='mr-4'>Select {sortBy}</label>
           <select name="selectedValue" id="selectedValue" className='rounded-md p-1' value={selectedValue} onChange={handleSelectedValue}>
             <option value="">All</option>
-            {[...new Set(filteredBooks.map(book => book[sortBy]))].map((value, index) => (
+            {[...new Set(bookData.map(book => book[sortBy]))].map((value, index) => (
               <option key={index} value={value}>{value}</option>
             ))}
           </select>
@@ -109,13 +110,13 @@ const Home = () => {
           </thead>
           <tbody>
             {filteredBooks.slice((currentPage - 1) * 5, currentPage * 5).map((book) => (
-              <tr key={book.ID}>
-                <td className='p-2'>{book.ID}</td>
-                <td>{book.Title}</td>
-                <td>{book.Author}</td>
-                <td>{book.Publisher}</td>
-                <td>{book.Genre}</td>
-                <td>{formatDate(book.Published_Date)}</td>
+              <tr key={book.id}>
+                <td className='p-2'>{book.id}</td>
+                <td>{book.title}</td>
+                <td>{book.author}</td>
+                <td>{book.publisher}</td>
+                <td>{book.genre}</td>
+                <td>{formatDate(book.published_date)}</td>
               </tr>
             ))}
           </tbody>
