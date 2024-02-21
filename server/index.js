@@ -19,15 +19,10 @@ connectDB();
 
 app.get('/fetch', async (req, res) => {
     try {
-        const fetchAllQuery = 'SELECT * FROM Books';
-        db.query(fetchAllQuery, (error, results) => {
-            if (error) {
-                console.error(error);
-                return res.status(500).json({ message: "Error in Fetching - Query" });
-            }
-            return res.status(200).json(results);
-        })
-    } catch(error){
+        const result = await db.query('SELECT * FROM Books');
+        console.log(result.rows);
+        res.status(200).send(result.rows);
+    } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Error in Fetching - Api" })
     }
